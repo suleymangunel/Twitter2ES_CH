@@ -4,6 +4,12 @@ client = clickhouse_connect.get_client(host='pxymfzzqvk.eu-central-1.aws.clickho
                                        username='default', password='oHfqUARUFZwf')
 
 
+def get_top(top_limit):
+    query = "SELECT id FROM twitter ORDER BY twitter.retweetCount+twitter.likeCount DESC LIMIT {}".format(top_limit)
+    result = client.query(query)
+    return result
+
+
 def insert(_tweet_counts):
     _id = str(_tweet_counts['id'])
     _retweetCount = _tweet_counts['retweetCount']
@@ -19,21 +25,21 @@ def insert(_tweet_counts):
     client.query(query)
 
 
-def delete(firstname, lastname):
+def delete(_id):
     query = "SET allow_experimental_lightweight_delete = true;"
     client.query(query)
-    query = "DELETE FROM TableTest WHERE FirstName='{}' AND LastName='{}'".format(firstname, lastname)
+    query = "DELETE FROM twitter WHERE id='{}'".format(_id)
     result = client.query(query)
     return result
 
 
-def search(firstname, lastname):
-    query = "SELECT * FROM TableTest WHERE FirstName='{}' AND LastName='{}'".format(firstname, lastname)
+def search(_id):
+    query = "SELECT * FROM twitter WHERE id='{}'".format(_id)
     result = client.query(query)
     return result
 
 
-def update(firstname, lastname, _firstname, _lastname):
-    query = "UPDATE TableTest VALUES() WHERE FirstName='{}' AND LastName='{}'".format(firstname, lastname)
+def update(_id):
+    query = "UPDATE twitter VALUES() WHERE id='{}'".format(_id)
     result = client.query(query)
     return result

@@ -18,14 +18,16 @@ def insert(_tweet):
 
 
 def delete():
-    resp = client.delete(index="customer", id=1)
+    resp = client.delete(index="twitter", id=1)
 
 
-def read():
-    resp = client.get(index="customer", id=2)
-    print("First Name: {}\nLast Name: {}".format(resp["_source"]["firstname"], resp["_source"]["lastname"]))
+def read(_id):
+    resp = client.get(index="twitter", id=_id)
+    return resp
 
 
 def search(prop, words):
-    resp = client.search(index="customer", query={"match": {prop: words}})
+    resp = client.search(index="twitter", query={"match": {prop: words}})
     print(resp)
+
+
