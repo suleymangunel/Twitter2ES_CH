@@ -4,12 +4,19 @@ client = clickhouse_connect.get_client(host='pxymfzzqvk.eu-central-1.aws.clickho
                                        username='default', password='oHfqUARUFZwf')
 
 
-def insert():
-    test_data1 = [1, 'Süleyman', 'Günel']
-    test_data2 = [10, 'Hasan', 'Günel']
-    test_data = [test_data1, test_data2]
-    ic = client.create_insert_context(table='TableTest', data=test_data)
-    client.insert(context=ic)
+def insert(_tweet_counts):
+    _id = str(_tweet_counts['id'])
+    _retweetCount = _tweet_counts['retweetCount']
+    _replyCount = _tweet_counts['replyCount']
+    _likeCount = _tweet_counts['likeCount']
+    _quoteCount = _tweet_counts['quoteCount']
+    tweet_count = [_id, _retweetCount, _replyCount, _likeCount, _quoteCount]
+    tweet_counts = [tweet_count]
+    # ic = client.create_insert_context(table='twitter', data=tweet_counts, wait_for_async_insert=0)
+    # client.insert(context=ic)
+    query = ("INSERT INTO twitter SETTINGS async_insert=1, wait_for_async_insert=0 VALUES('{}',{},{},{},{})".
+             format(_id, _retweetCount, _replyCount, _likeCount, _quoteCount))
+    client.query(query)
 
 
 def delete(firstname, lastname):
@@ -26,11 +33,7 @@ def search(firstname, lastname):
     return result
 
 
-def main():
-    # insert()
-    result = search('Süleyman', 'Günel')
-    print(result.result_rows)
-    print(result.result_rows[0][1])
-    # result = delete("Hasan", "Günel")
-    # print(result.result_rows)
-
+def update(firstname, lastname, _firstname, _lastname):
+    query = "UPDATE TableTest VALUES() WHERE FirstName='{}' AND LastName='{}'".format(firstname, lastname)
+    result = client.query(query)
+    return result

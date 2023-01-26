@@ -6,14 +6,15 @@ NODES = [
 
 client = Elasticsearch(NODES, basic_auth=("elastic", "heqwElWrxK8EE4tnmxlk"))
 
-doc = {
-    'firstname': 'author_name',
-    'lastname': 'Interensting content...'
-}
 
-
-def insert():
-    resp = client.index(index="customer", id=1, document=doc)
+def insert(_tweet):
+    _id = _tweet['id']
+    _content = _tweet['content']
+    _doc = {
+        'id': _id,
+        'content': _content
+    }
+    resp = client.index(index="twitter", id=_id, document=_doc)
 
 
 def delete():
@@ -28,7 +29,3 @@ def read():
 def search(prop, words):
     resp = client.search(index="customer", query={"match": {prop: words}})
     print(resp)
-
-
-def main():
-    search("firstname", "claire")
