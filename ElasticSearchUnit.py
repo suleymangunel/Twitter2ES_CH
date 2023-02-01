@@ -2,13 +2,6 @@ from decouple import config
 from elasticsearch import Elasticsearch
 
 
-# NODES = [
-#     config('ES_HOST')
-# ]
-#
-# client = Elasticsearch(NODES, basic_auth=(config('ES_USERNAME'), config('ES_PASSWORD')))
-
-
 class _Client:
     NODES = [config('ES_HOST')]
     username = config('ES_USERNAME')

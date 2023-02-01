@@ -1,6 +1,4 @@
 from typing import Dict, Union
-
-import tweepy
 import snscrape.modules.twitter as sntwitter
 import ElasticSearchUnit as ESu
 import ClickHouseUnit as CHu
