@@ -1,10 +1,11 @@
+from decouple import config
 from elasticsearch import Elasticsearch
 
 NODES = [
     "http://localhost:9200"
 ]
 
-client = Elasticsearch(NODES, basic_auth=("elastic", "heqwElWrxK8EE4tnmxlk"))
+client = Elasticsearch(NODES, basic_auth=(config('ES_USERNAME'), config('ES_PASSWORD')))
 
 
 def insert(_tweet):

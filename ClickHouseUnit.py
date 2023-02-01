@@ -1,7 +1,8 @@
 import clickhouse_connect
+from decouple import config
 
 client = clickhouse_connect.get_client(host='pxymfzzqvk.eu-central-1.aws.clickhouse.cloud', port=8443,
-                                       username='default', password='oHfqUARUFZwf')
+                                       username=config('CH_USERNAME'), password=config('CH_PASSWORD'))
 
 
 def get_top(top_limit):
