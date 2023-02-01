@@ -1,13 +1,24 @@
 import clickhouse_connect
 from decouple import config
 
-client = clickhouse_connect.get_client(host=config('CH_HOST'), port=config('CH_PORT'),
-                                       username=config('CH_USERNAME'), password=config('CH_PASSWORD'))
+
+class _Client:
+    host = config('CH_HOST')
+    port = int(config('CH_PORT'))
+    username = config('CH_USERNAME')
+    password = config('CH_PASSWORD')
+
+    def client(self):
+        return clickhouse_connect.get_client(host=self.host, port=self.port,
+                                             username=self.username, password=self.password)
+
+
+_client = _Client().client()
 
 
 def get_top(top_limit):
     query = "SELECT id FROM twitter ORDER BY twitter.retweetCount+twitter.likeCount DESC LIMIT {}".format(top_limit)
-    result = client.query(query)
+    result = _client.query(query)
     return result
 
 
@@ -23,24 +34,24 @@ def insert(_tweet_counts):
     # client.insert(context=ic)
     query = ("INSERT INTO twitter SETTINGS async_insert=1, wait_for_async_insert=0 VALUES('{}',{},{},{},{})".
              format(_id, _retweetCount, _replyCount, _likeCount, _quoteCount))
-    client.query(query)
+    _client.query(query)
 
 
 def delete(_id):
     query = "SET allow_experimental_lightweight_delete = true;"
-    client.query(query)
+    _client.client.query(query)
     query = "DELETE FROM twitter WHERE id='{}'".format(_id)
-    result = client.query(query)
+    result = _client.query(query)
     return result
 
 
 def search(_id):
     query = "SELECT * FROM twitter WHERE id='{}'".format(_id)
-    result = client.query(query)
+    result = _client.query(query)
     return result
 
 
 def update(_id):
     query = "UPDATE twitter VALUES() WHERE id='{}'".format(_id)
-    result = client.query(query)
+    result = _client.query(query)
     return result
