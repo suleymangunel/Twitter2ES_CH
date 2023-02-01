@@ -2,7 +2,7 @@ from decouple import config
 from elasticsearch import Elasticsearch
 
 NODES = [
-    "http://localhost:9200"
+    config('ES_HOST')
 ]
 
 client = Elasticsearch(NODES, basic_auth=(config('ES_USERNAME'), config('ES_PASSWORD')))

@@ -1,7 +1,7 @@
 import clickhouse_connect
 from decouple import config
 
-client = clickhouse_connect.get_client(host='pxymfzzqvk.eu-central-1.aws.clickhouse.cloud', port=8443,
+client = clickhouse_connect.get_client(host=config('CH_HOST'), port=config('CH_PORT'),
                                        username=config('CH_USERNAME'), password=config('CH_PASSWORD'))
 
 
